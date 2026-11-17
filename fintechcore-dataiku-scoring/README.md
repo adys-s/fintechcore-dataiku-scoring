@@ -140,6 +140,8 @@ Les transactions sont jointes aux profils clients sur `client_id` avec un **left
 
 ![Recette Prepare](images/03_prepare.png.png)
 
+> ⚠️ **Choix technique sur l'imputation :** l'étape Dataiku d'imputation par une *valeur calculée* (« Impute with computed value ») n'était pas disponible dans la bibliothèque de processeurs de l'instance utilisée. La médiane de l'âge (**47 ans**) a donc été calculée au préalable (via l'analyse de la colonne), puis appliquée avec l'étape **« Remplir les cellules vides avec une valeur fixe »**. Le résultat est identique sur les données actuelles, mais la valeur est **figée** : elle ne se recalcule pas si de nouveaux clients arrivent (voir [Limites](#9-limites-et-pistes-damélioration)).
+
 > 💡 La variable `dette_ratio` créée ici arrive en **2ᵉ position** dans l'importance des variables du modèle final.
 
 ---
@@ -272,9 +274,11 @@ Merci de contacter ces clients en priorité.
 - **Fuite de données possible :** `montant_impaye` est la variable la plus prédictive. Dans un contexte réel, il faudrait vérifier qu'elle est connue **avant** le défaut et non mesurée après, sinon le modèle exploiterait une information du futur.
 - **Données synthétiques** et volume réduit (1 023 clients pour l'entraînement) : les performances ne sont pas transposables telles quelles.
 - **Seuil d'alerte fixé à 0,5**, alors que Dataiku a calculé un seuil optimal sur le F1-score. Les deux devraient être alignés.
+- **L'imputation de l'âge utilise une valeur fixe (47 ans)** au lieu d'une médiane recalculée dynamiquement. Dans un pipeline automatisé qui reçoit de nouvelles données chaque semaine, cette valeur peut devenir obsolète.
 - La médiane d'imputation de l'âge est calculée sur la table jointe (une ligne par transaction) : un client avec beaucoup de transactions pèse davantage.
 
 **Pistes d'amélioration**
+- Rendre l'imputation de l'âge **dynamique** : étape « Impute with computed value » (médiane) si elle est disponible, calcul de la médiane dans une recette Python, ou imputation par la médiane directement dans le Lab (*Features handling → Missing values*), recalculée à chaque réentraînement.
 - Aligner le seuil d'alerte du scénario sur le seuil optimal du modèle, ou le définir avec le métier à l'aide de la **matrice de coûts**.
 - Ajouter des **règles de qualité des données** (unicité de `client_id`, fraîcheur des transactions) qui bloquent le scénario en cas d'anomalie.
 - Ajouter un trigger sur la **modification du dataset** `transactions_csv`, en plus du trigger hebdomadaire.
