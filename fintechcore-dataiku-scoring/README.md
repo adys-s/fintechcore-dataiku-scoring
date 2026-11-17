@@ -7,9 +7,9 @@
 
 > Pipeline de données **automatisé** qui prépare l'historique des clients d'un organisme de crédit, calcule des indicateurs de retard de paiement, entraîne un modèle de détection des impayés et envoie chaque semaine une alerte sur les clients à haut risque.
 
-Projet réalisé dans le cadre de mon parcours **« 8 technos, 8 projets »**.
 
-![Flow Dataiku complet](images/01_flow.png)
+![Flow Dataiku complet](images/01_flow.png.png
+)
 
 ---
 
@@ -128,7 +128,7 @@ Les transactions sont jointes aux profils clients sur `client_id` avec un **left
 - **Pourquoi un left join ?** Aucune transaction ne doit être perdue, même si un profil client venait à manquer.
 - **Contrôle :** le nombre de lignes reste à **10 792** après la jointure, ce qui confirme que `client_id` est bien unique côté clients et qu'aucune ligne n'a été dupliquée.
 
-![Recette Join](images/02_join.png)
+![Recette Join](images/02_join.png.png)
 
 ### Prepare
 
@@ -138,7 +138,7 @@ Les transactions sont jointes aux profils clients sur `client_id` avec un **left
 | 2 | **Imputation de l'âge par la médiane** (47 ans) | La médiane résiste aux valeurs extrêmes, contrairement à la moyenne |
 | 3 | **Formule** `dette_ratio = montant_impaye / revenu_annuel` | Mesure le poids de la dette dans les revenus du client |
 
-![Recette Prepare](images/03_prepare.png)
+![Recette Prepare](images/03_prepare.png.png)
 
 > 💡 La variable `dette_ratio` créée ici arrive en **2ᵉ position** dans l'importance des variables du modèle final.
 
@@ -160,7 +160,7 @@ La recette Python fait l'équivalent de **trois recettes visuelles** :
 
 Le script **convertit aussi les colonnes numériques**, car les CSV importés sont stockés en `string` par Dataiku.
 
-![Recette Python](images/04_python_recipe.png)
+![Recette Python](images/04_python_recipe.png.png)
 
 ---
 
@@ -184,7 +184,7 @@ Le script **convertit aussi les colonnes numériques**, car les CSV importés so
 | **Random Forest** 🏆 | **0,837** |
 | XGBoost | 0,776 |
 
-![Résultats du Lab](images/05_lab_results.png)
+![Résultats du Lab](images/05_lab_results.png.png)
 
 ### Performance du Random Forest (jeu de test, 199 clients)
 
@@ -202,7 +202,7 @@ Le script **convertit aussi les colonnes numériques**, car les CSV importés so
 
 **Interprétation métier :** le modèle privilégie le **rappel**. Il préfère lancer des alertes en trop (29 faux positifs) plutôt que rater de vrais défauts. Pour un organisme de crédit, appeler un client qui n'est pas à risque coûte beaucoup moins cher qu'un crédit non remboursé.
 
-![Matrice de confusion](images/07_confusion_matrix.png)
+![Matrice de confusion](images/07_confusion_matrix.png.png)
 
 ### Variables les plus importantes
 
@@ -214,12 +214,12 @@ Le script **convertit aussi les colonnes numériques**, car les CSV importés so
 6. `jours_retard_max`
 
 <p align="center">
-  <img src="images/06a_feature_importance.png" alt="Importance des variables (1/3)" width="32%">
-  <img src="images/06b_feature_importance.png" alt="Importance des variables (2/3)" width="32%">
-  <img src="images/06c_feature_importance.png" alt="Importance des variables (3/3)" width="32%">
+  <img src="images/06a_feature_importance.png.png" alt="Importance des variables (1/3)" width="32%">
+  <img src="images/06b_feature_importance.png.png" alt="Importance des variables (2/3)" width="32%">
+  <img src="images/06c_feature_importance.png.png" alt="Importance des variables (3/3)" width="32%">
 </p>
 
-![Courbe ROC](images/08_roc_curve.png)
+![Courbe ROC](images/08_roc_curve.png.png)
 
 ### Déploiement et scoring
 
@@ -228,7 +228,7 @@ Le Random Forest est **déployé dans le Flow** (`modele_defaut_paiement`), puis
 - `proba_0` : probabilité de remboursement ;
 - `proba_1` : **probabilité de défaut**, utilisée comme score de risque.
 
-![Dataset scoré](images/09_scored_dataset.png)
+![Dataset scoré](images/09_scored_dataset.png.png)
 
 ---
 
@@ -243,9 +243,9 @@ Scénario **`Pipeline_hebdo`** :
 | **Trigger** | Basé sur le temps : **chaque lundi à 06:00** (Europe/Paris) |
 | **Reporter** | Mail d'alerte en fin de scénario, avec les variables `${nb_haut_risque}`, `${nb_clients_scores}` et `${seuil_risque}` |
 
-![Étapes du scénario](images/10_scenario_steps.png)
-![Trigger du scénario](images/11_scenario_trigger.png)
-![Reporter mail](images/12_scenario_reporter.png)
+![Étapes du scénario](images/10_scenario_steps.png.png)
+![Trigger du scénario](images/11_scenario_trigger.png.png)
+![Reporter mail](images/12_scenario_reporter.png.png)
 
 **Message d'alerte :**
 ```
@@ -260,7 +260,7 @@ Merci de contacter ces clients en priorité.
 
 **Exécution :** les deux étapes sont terminées avec succès en **10 secondes**, avec **21 clients à haut risque sur 177**.
 
-![Dernières exécutions](images/13_scenario_last_runs.png)
+![Dernières exécutions](images/13_scenario_last_runs.png.png)
 
 > ℹ️ L'envoi du mail est **simulé** : l'instance d'essai Dataiku Cloud n'a pas de canal SMTP. En production, le canal mail de l'entreprise serait configuré dans *Administration → Paramètres → Notifications*.
 
