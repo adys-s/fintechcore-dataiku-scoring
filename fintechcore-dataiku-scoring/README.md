@@ -333,4 +333,4 @@ fintechcore-dataiku-scoring/
 **Silvère ADODO-DAHOUE**, Data Analyst BI, en évolution vers l'Analytics Engineering
 Certifié **Dataiku Core Designer**
 
-[LinkedIn](https://www.linkedin.com/in/VOTRE-PROFIL)
+[LinkedIn](https://www.linkedin.com/in/silvereadodo/)
